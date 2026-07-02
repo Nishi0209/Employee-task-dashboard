@@ -36,28 +36,27 @@ function App() {
   const toggleTask = (id) => {
     setTasks(
       tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+        t.id === id ? { ...t, completed: !t.completed } : t,
+      ),
     );
   };
 
-
   const filteredTasks = tasks.filter((task) => {
-  const matchesSearch = task.text
-    .toLowerCase()
-    .includes(search.toLowerCase());
+    const matchesSearch = task.text
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-  const matchesFilter =
+    const matchesFilter =
     filter === "All" ||
     (filter === "Completed" && task.completed) ||
     (filter === "Pending" && !task.completed);
 
-  return matchesSearch && matchesFilter;
-});
+    return matchesSearch && matchesFilter;
+  });
 
-const deleteTask = (id) => {
-  setTasks(tasks.filter((task) => task.id !== id));
-};
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
 
   if (!isLoggedIn) {
     return (
@@ -93,20 +92,20 @@ const deleteTask = (id) => {
         <h3>Welcome, {employeeId}</h3>
 
         <input
-           type="text"
-            placeholder="Search Task"
-           value={search}
-            onChange={(e) => setSearch(e.target.value)}
-/>
+          type="text"
+          placeholder="Search Task"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-<select
-  value={filter}
-  onChange={(e) => setFilter(e.target.value)}
->
-  <option>All</option>
-  <option>Pending</option>
-  <option>Completed</option>
-</select>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option>All</option>
+          <option>Pending</option>
+          <option>Completed</option>
+        </select>
 
         <div className="task-input">
           <input
