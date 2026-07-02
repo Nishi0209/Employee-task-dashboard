@@ -7,6 +7,8 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
 
   const handleLogin = () => {
     if (!employeeId || !password) {
@@ -38,6 +40,24 @@ function App() {
       )
     );
   };
+
+
+  const filteredTasks = tasks.filter((task) => {
+  const matchesSearch = task.text
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  const matchesFilter =
+    filter === "All" ||
+    (filter === "Completed" && task.completed) ||
+    (filter === "Pending" && !task.completed);
+
+  return matchesSearch && matchesFilter;
+});
+
+const deleteTask = (id) => {
+  setTasks(tasks.filter((task) => task.id !== id));
+};
 
   if (!isLoggedIn) {
     return (
@@ -72,6 +92,22 @@ function App() {
 
         <h3>Welcome, {employeeId}</h3>
 
+        <input
+           type="text"
+            placeholder="Search Task"
+           value={search}
+            onChange={(e) => setSearch(e.target.value)}
+/>
+
+<select
+  value={filter}
+  onChange={(e) => setFilter(e.target.value)}
+>
+  <option>All</option>
+  <option>Pending</option>
+  <option>Completed</option>
+</select>
+
         <div className="task-input">
           <input
             type="text"
@@ -84,7 +120,7 @@ function App() {
         </div>
 
         <ul>
-          {tasks.map((t) => (
+          {filteredTasks.map((t) => (
             <li key={t.id}>
               <span
                 style={{
@@ -96,6 +132,10 @@ function App() {
 
               <button onClick={() => toggleTask(t.id)}>
                 {t.completed ? "Undo" : "Complete"}
+              </button>
+
+              <button onClick={() => deleteTask(t.id)}>
+                      Delete
               </button>
             </li>
           ))}
