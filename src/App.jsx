@@ -2,9 +2,15 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [employeeId, setEmployeeId] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [employeeId, setEmployeeId] = useState(
+  localStorage.getItem("employeeId") || ""
+);
+
+const [password, setPassword] = useState("");
+
+const [isLoggedIn, setIsLoggedIn] = useState(
+  JSON.parse(localStorage.getItem("isLoggedIn")) || false
+);
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState(() => {
   const savedTasks = localStorage.getItem("tasks");
@@ -16,6 +22,12 @@ function App() {
   useEffect(() => {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }, [tasks]);
+
+  useEffect(() => {
+  localStorage.setItem("employeeId", employeeId);
+  localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
+}, [employeeId, isLoggedIn]);
+
 
   const handleLogin = () => {
     if (!employeeId || !password) {
@@ -66,6 +78,17 @@ const deleteTask = (id) => {
   setTasks(tasks.filter((task) => task.id !== id));
 };
 
+
+const logout = () => {
+  localStorage.removeItem("employeeId");
+  localStorage.removeItem("isLoggedIn");
+
+  setEmployeeId("");
+  setPassword("");
+  setIsLoggedIn(false);
+};
+
+
   if (!isLoggedIn) {
     return (
       <div className="container">
@@ -98,6 +121,8 @@ const deleteTask = (id) => {
         <h1>Employee Task Dashboard</h1>
 
         <h3>Welcome, {employeeId}</h3>
+
+        <button onClick={logout}>Logout</button>
 
         <input
            type="text"
