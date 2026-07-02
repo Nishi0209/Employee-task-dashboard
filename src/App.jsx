@@ -19,7 +19,9 @@ function App() {
   };
 
   const addTask = () => {
-    if (!task.trim()) return;
+    if (!task.trim()) {
+      return;
+    }
 
     setTasks([
       ...tasks,
@@ -35,24 +37,23 @@ function App() {
 
   const toggleTask = (id) => {
     setTasks(
-      tasks.map((t) =>
+      tasks.map((task) =>
         t.id === id ? { ...t, completed: !t.completed } : t,
       ),
     );
   };
 
-  const filteredTasks = tasks.filter((task) => {
-    const matchesSearch = task.text
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const matchesSearch = (task, query) =>
+    task.text.toLowerCase().includes(query.toLowerCase());
 
-    const matchesFilter =
+  const matchesStatus = (task, filter) =>
     filter === "All" ||
     (filter === "Completed" && task.completed) ||
     (filter === "Pending" && !task.completed);
 
-    return matchesSearch && matchesFilter;
-  });
+  const filteredTasks = tasks.filter(
+    (task) => matchesSearch(task, search) && matchesStatus(task, filter)
+  );
 
   const deleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
@@ -134,7 +135,7 @@ function App() {
               </button>
 
               <button onClick={() => deleteTask(t.id)}>
-                      Delete
+                Delete
               </button>
             </li>
           ))}
