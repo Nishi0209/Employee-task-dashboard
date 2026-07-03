@@ -1,9 +1,5 @@
 import Login from "./components/Login";
-import Stats from "./components/Stats";
-import SearchBar from "./components/SearchBar";
-import Filter from "./components/Filter";
-import TaskInput from "./components/TaskInput";
-import TaskList from "./components/TaskList";
+import Dashboard from "./components/Dashboard";
 import { useEffect, useState } from "react";
 import "./App.css";
 
@@ -142,8 +138,6 @@ function App() {
   ).length;
 
   const pendingTasks = totalTasks - completedTasks;
-
-
   if (!isLoggedIn) {
     return (
       <Login
@@ -156,54 +150,35 @@ function App() {
     );
   }
 
+
   return (
-    <div className="container">
-      <div className="dashboard">
-        <h1>Employee Task Dashboard</h1>
-
-        <h3>Welcome, {employeeId}</h3>
-
-        <Stats
-          totalTasks={totalTasks}
-          completedTasks={completedTasks}
-          pendingTasks={pendingTasks}
-        />
-
-        <button onClick={logout}>Logout</button>
-
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-        />
-
-        <Filter
-          filter={filter}
-          setFilter={setFilter}
-        />
-
-        <TaskInput
-          task={task}
-          setTask={setTask}
-          addTask={addTask}
-          dueDate={dueDate}
-          setDueDate={setDueDate}
-          priority={priority}
-          setPriority={setPriority}
-          error={error}
-        />
-
-        <TaskList
-          filteredTasks={filteredTasks}
-          editingId={editingId}
-          editText={editText}
-          setEditText={setEditText}
-          toggleTask={toggleTask}
-          editTask={editTask}
-          saveTask={saveTask}
-          deleteTask={deleteTask}
-        />
-      </div>
-    </div>
+    <Dashboard
+      employeeId={employeeId}
+      logout={logout}
+      totalTasks={totalTasks}
+      completedTasks={completedTasks}
+      pendingTasks={pendingTasks}
+      search={search}
+      setSearch={setSearch}
+      filter={filter}
+      setFilter={setFilter}
+      task={task}
+      setTask={setTask}
+      addTask={addTask}
+      dueDate={dueDate}
+      setDueDate={setDueDate}
+      priority={priority}
+      setPriority={setPriority}
+      error={error}
+      filteredTasks={filteredTasks}
+      editingId={editingId}
+      editText={editText}
+      setEditText={setEditText}
+      toggleTask={toggleTask}
+      editTask={editTask}
+      saveTask={saveTask}
+      deleteTask={deleteTask}
+    />
   );
 }
 
