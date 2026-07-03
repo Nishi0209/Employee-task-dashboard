@@ -3,6 +3,7 @@ import Stats from "./components/Stats";
 import SearchBar from "./components/SearchBar";
 import Filter from "./components/Filter";
 import TaskInput from "./components/TaskInput";
+import TaskList from "./components/TaskList";
 import { useEffect, useState } from "react";
 import "./App.css";
 
@@ -191,56 +192,16 @@ function App() {
           error={error}
         />
 
-        <ul>
-          {filteredTasks.map((t) => (
-            <li key={t.id}>
-              {editingId === t.id ? (
-                <input
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-              ) : (
-                <div className="task-info">
-                  <span
-                    style={{
-                      textDecoration: t.completed ? "line-through" : "none",
-                    }}
-                  >
-                    {t.text}
-                  </span>
-
-                  <p className="task-details">
-                    📅 Due: {t.dueDate || "Not Set"}
-                  </p>
-
-                  <p className="task-details">
-                    {t.priority === "High" && "🔴 High"}
-                    {t.priority === "Medium" && "🟡 Medium"}
-                    {t.priority === "Low" && "🟢 Low"}
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <button onClick={() => toggleTask(t.id)}>
-                  {t.completed ? "Undo" : "Complete"}
-                </button>
-
-                {editingId === t.id ? (
-                  <button onClick={saveTask}>Save</button>
-                ) : (
-                  <button onClick={() => editTask(t)}>
-                    Edit
-                  </button>
-                )}
-
-                <button onClick={() => deleteTask(t.id)}>
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <TaskList
+          filteredTasks={filteredTasks}
+          editingId={editingId}
+          editText={editText}
+          setEditText={setEditText}
+          toggleTask={toggleTask}
+          editTask={editTask}
+          saveTask={saveTask}
+          deleteTask={deleteTask}
+        />
       </div>
     </div>
   );
