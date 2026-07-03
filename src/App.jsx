@@ -3,19 +3,22 @@ import "./App.css";
 
 function App() {
   const [employeeId, setEmployeeId] = useState(
-  localStorage.getItem("employeeId") || ""
-);
+    localStorage.getItem("employeeId") || ""
+  );
 
-const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
-const [isLoggedIn, setIsLoggedIn] = useState(
-  JSON.parse(localStorage.getItem("isLoggedIn")) || false
-);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    JSON.parse(localStorage.getItem("isLoggedIn")) || false
+  );
   const [task, setTask] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [priority, setPriority] = useState("Medium");
+  const [error, setError] = useState("");
   const [tasks, setTasks] = useState(() => {
-  const savedTasks = localStorage.getItem("tasks");
-  return savedTasks ? JSON.parse(savedTasks) : [];
-});
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
@@ -23,13 +26,13 @@ const [isLoggedIn, setIsLoggedIn] = useState(
   const [editText, setEditText] = useState("");
 
   useEffect(() => {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}, [tasks]);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   useEffect(() => {
-  localStorage.setItem("employeeId", employeeId);
-  localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
-}, [employeeId, isLoggedIn]);
+    localStorage.setItem("employeeId", employeeId);
+    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
+  }, [employeeId, isLoggedIn]);
 
 
   const handleLogin = () => {
@@ -41,18 +44,35 @@ const [isLoggedIn, setIsLoggedIn] = useState(
   };
 
   const addTask = () => {
-    if (!task.trim()) return;
+    if (!task.trim()) {
+      return;
+    }
+
+    const isDuplicate = tasks.some(
+      (t) =>
+        t.text.trim().toLowerCase() === task.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      setError("Task already exists.");
+      return;
+    }
 
     setTasks([
       ...tasks,
       {
         id: Date.now(),
-        text: task,
+        text: task.trim(),
         completed: false,
+        dueDate,
+        priority,
       },
     ]);
 
     setTask("");
+    setDueDate("");
+    setPriority("Medium");
+    setError("");
   };
 
   const toggleTask = (id) => {
@@ -65,57 +85,57 @@ const [isLoggedIn, setIsLoggedIn] = useState(
 
 
   const filteredTasks = tasks.filter((task) => {
-  const matchesSearch = task.text
-    .toLowerCase()
-    .includes(search.toLowerCase());
+    const matchesSearch = task.text
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-  const matchesFilter =
-    filter === "All" ||
-    (filter === "Completed" && task.completed) ||
-    (filter === "Pending" && !task.completed);
+    const matchesFilter =
+      filter === "All" ||
+      (filter === "Completed" && task.completed) ||
+      (filter === "Pending" && !task.completed);
 
-  return matchesSearch && matchesFilter;
-});
+    return matchesSearch && matchesFilter;
+  });
 
-const deleteTask = (id) => {
-  setTasks(tasks.filter((task) => task.id !== id));
-};
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
 
-const editTask = (task) => {
-  setEditingId(task.id);
-  setEditText(task.text);
-};
+  const editTask = (task) => {
+    setEditingId(task.id);
+    setEditText(task.text);
+  };
 
-const saveTask = () => {
-  setTasks(
-    tasks.map((task) =>
-      task.id === editingId
-        ? { ...task, text: editText }
-        : task
-    )
-  );
+  const saveTask = () => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === editingId
+          ? { ...task, text: editText }
+          : task
+      )
+    );
 
-  setEditingId(null);
-  setEditText("");
-};
+    setEditingId(null);
+    setEditText("");
+  };
 
 
-const logout = () => {
-  localStorage.removeItem("employeeId");
-  localStorage.removeItem("isLoggedIn");
+  const logout = () => {
+    localStorage.removeItem("employeeId");
+    localStorage.removeItem("isLoggedIn");
 
-  setEmployeeId("");
-  setPassword("");
-  setIsLoggedIn(false);
-};
+    setEmployeeId("");
+    setPassword("");
+    setIsLoggedIn(false);
+  };
 
-const totalTasks = tasks.length;
+  const totalTasks = tasks.length;
 
-const completedTasks = tasks.filter(
-  (task) => task.completed
-).length;
+  const completedTasks = tasks.filter(
+    (task) => task.completed
+  ).length;
 
-const pendingTasks = totalTasks - completedTasks;
+  const pendingTasks = totalTasks - completedTasks;
 
 
   if (!isLoggedIn) {
@@ -152,28 +172,28 @@ const pendingTasks = totalTasks - completedTasks;
         <h3>Welcome, {employeeId}</h3>
 
         <div className="stats">
-  <p>Total Tasks : {totalTasks}</p>
-  <p>Completed : {completedTasks}</p>
-  <p>Pending : {pendingTasks}</p>
-</div>
+          <p>Total Tasks : {totalTasks}</p>
+          <p>Completed : {completedTasks}</p>
+          <p>Pending : {pendingTasks}</p>
+        </div>
 
         <button onClick={logout}>Logout</button>
 
         <input
-           type="text"
-            placeholder="Search Task"
-           value={search}
-            onChange={(e) => setSearch(e.target.value)}
-/>
+          type="text"
+          placeholder="Search Task"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-<select
-  value={filter}
-  onChange={(e) => setFilter(e.target.value)}
->
-  <option>All</option>
-  <option>Pending</option>
-  <option>Completed</option>
-</select>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option>All</option>
+          <option>Pending</option>
+          <option>Completed</option>
+        </select>
 
         <div className="task-input">
           <input
@@ -182,47 +202,71 @@ const pendingTasks = totalTasks - completedTasks;
             value={task}
             onChange={(e) => setTask(e.target.value)}
           />
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+          >
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+          </select>
 
+          {error && <p className="error">{error}</p>}
           <button onClick={addTask}>Add Task</button>
         </div>
 
         <ul>
           {filteredTasks.map((t) => (
             <li key={t.id}>
-             {editingId === t.id ? (
-  <input
-    value={editText}
-    onChange={(e) => setEditText(e.target.value)}
-  />
-) : (
-  <span
-    style={{
-      textDecoration: t.completed
-        ? "line-through"
-        : "none",
-    }}
-  >
-    {t.text}
-  </span>
-)}
+              {editingId === t.id ? (
+                <input
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+              ) : (
+                <div className="task-info">
+                  <span
+                    style={{
+                      textDecoration: t.completed ? "line-through" : "none",
+                    }}
+                  >
+                    {t.text}
+                  </span>
+
+                  <p className="task-details">
+                    📅 Due: {t.dueDate || "Not Set"}
+                  </p>
+
+                  <p className="task-details">
+                    {t.priority === "High" && "🔴 High"}
+                    {t.priority === "Medium" && "🟡 Medium"}
+                    {t.priority === "Low" && "🟢 Low"}
+                  </p>
+                </div>
+              )}
 
               <div>
-  <button onClick={() => toggleTask(t.id)}>
-    {t.completed ? "Undo" : "Complete"}
-  </button>
+                <button onClick={() => toggleTask(t.id)}>
+                  {t.completed ? "Undo" : "Complete"}
+                </button>
 
-  {editingId === t.id ? (
-    <button onClick={saveTask}>Save</button>
-  ) : (
-    <button onClick={() => editTask(t)}>
-      Edit
-    </button>
-  )}
+                {editingId === t.id ? (
+                  <button onClick={saveTask}>Save</button>
+                ) : (
+                  <button onClick={() => editTask(t)}>
+                    Edit
+                  </button>
+                )}
 
-  <button onClick={() => deleteTask(t.id)}>
-    Delete
-  </button>
-</div>
+                <button onClick={() => deleteTask(t.id)}>
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
