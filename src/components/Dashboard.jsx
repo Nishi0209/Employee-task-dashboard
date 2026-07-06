@@ -31,6 +31,11 @@ function Dashboard({
     editTask,
     saveTask,
     deleteTask,
+    editDueDate,
+    setEditDueDate,
+    editPriority,
+    setEditPriority,
+    cancelEdit,
 }) {
     return (
         <div className="container">
@@ -79,6 +84,11 @@ function Dashboard({
                     editTask={editTask}
                     saveTask={saveTask}
                     deleteTask={deleteTask}
+                    editDueDate={editDueDate}
+                    setEditDueDate={setEditDueDate}
+                    editPriority={editPriority}
+                    setEditPriority={setEditPriority}
+                    cancelEdit={cancelEdit}
                 />
             </div>
         </div>
@@ -120,6 +130,14 @@ Dashboard.propTypes = {
     editTask: PropTypes.func.isRequired,
     saveTask: PropTypes.func.isRequired,
     deleteTask: PropTypes.func.isRequired,
+
+    editDueDate: PropTypes.string.isRequired,
+    setEditDueDate: PropTypes.func.isRequired,
+
+    editPriority: PropTypes.string.isRequired,
+    setEditPriority: PropTypes.func.isRequired,
+
+    cancelEdit: PropTypes.func.isRequired,
 };
 
 export default Dashboard;

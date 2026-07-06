@@ -26,6 +26,8 @@ function App() {
 
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [editDueDate, setEditDueDate] = useState("");
+  const [editPriority, setEditPriority] = useState("Medium");
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -106,19 +108,46 @@ function App() {
   const editTask = (task) => {
     setEditingId(task.id);
     setEditText(task.text);
+    setEditDueDate(task.dueDate || "");
+    setEditPriority(task.priority || "Medium");
   };
 
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+    setEditDueDate("");
+    setEditPriority("Medium");
+  };
+
+
+
   const saveTask = () => {
+    const isDuplicate = tasks.some(
+      (task) =>
+        task.id !== editingId &&
+        task.text.trim().toLowerCase() ===
+        editText.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      alert("Task already exists.");
+      return;
+    }
+
     setTasks(
       tasks.map((task) =>
         task.id === editingId
-          ? { ...task, text: editText }
+          ? {
+            ...task,
+            text: editText.trim(),
+            dueDate: editDueDate,
+            priority: editPriority,
+          }
           : task
       )
     );
 
-    setEditingId(null);
-    setEditText("");
+    cancelEdit();
   };
 
 
@@ -171,12 +200,21 @@ function App() {
       setPriority={setPriority}
       error={error}
       filteredTasks={filteredTasks}
+
       editingId={editingId}
       editText={editText}
       setEditText={setEditText}
+
+      editDueDate={editDueDate}
+      setEditDueDate={setEditDueDate}
+
+      editPriority={editPriority}
+      setEditPriority={setEditPriority}
+
       toggleTask={toggleTask}
       editTask={editTask}
       saveTask={saveTask}
+      cancelEdit={cancelEdit}
       deleteTask={deleteTask}
     />
   );
