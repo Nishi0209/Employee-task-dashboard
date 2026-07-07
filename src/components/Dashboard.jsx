@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar";
 import Filter from "./Filter";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
+import Sort from "./Sort";
 
 function Dashboard({
     employeeId,
@@ -24,6 +25,8 @@ function Dashboard({
     setPriority,
     error,
     filteredTasks,
+    sortBy,
+    setSortBy,
     editingId,
     editText,
     setEditText,
@@ -62,6 +65,10 @@ function Dashboard({
                 <Filter
                     filter={filter}
                     setFilter={setFilter}
+                />
+                <Sort
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
                 />
 
                 <TaskInput
@@ -107,6 +114,9 @@ Dashboard.propTypes = {
 
     filter: PropTypes.string.isRequired,
     setFilter: PropTypes.func.isRequired,
+
+    sortBy: PropTypes.string.isRequired,
+    setSortBy: PropTypes.func.isRequired,
 
     task: PropTypes.string.isRequired,
     setTask: PropTypes.func.isRequired,
