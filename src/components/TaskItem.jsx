@@ -1,23 +1,25 @@
 import PropTypes from "prop-types";
+import { useTaskContext } from "../context/TaskContext";
 
-function TaskItem({
-    task,
-    editingId,
-    editText,
-    setEditText,
-    editDueDate,
-    setEditDueDate,
-    editPriority,
-    setEditPriority,
-    toggleTask,
-    editTask,
-    saveTask,
-    cancelEdit,
-    deleteTask,
-    deleteId,
-    confirmDelete,
-    cancelDelete,
-}) {
+function TaskItem({ task }) {
+    const {
+        editingId,
+        editText,
+        setEditText,
+        editDueDate,
+        setEditDueDate,
+        editPriority,
+        setEditPriority,
+        toggleTask,
+        editTask,
+        saveTask,
+        cancelEdit,
+        deleteTask,
+        deleteId,
+        confirmDelete,
+        cancelDelete,
+    } = useTaskContext();
+
     const isEditing = editingId === task.id;
 
     return (
@@ -115,26 +117,6 @@ function TaskItem({
 
 TaskItem.propTypes = {
     task: PropTypes.object.isRequired,
-
-    editingId: PropTypes.number,
-
-    editText: PropTypes.string.isRequired,
-    setEditText: PropTypes.func.isRequired,
-
-    editDueDate: PropTypes.string.isRequired,
-    setEditDueDate: PropTypes.func.isRequired,
-
-    editPriority: PropTypes.string.isRequired,
-    setEditPriority: PropTypes.func.isRequired,
-
-    toggleTask: PropTypes.func.isRequired,
-    editTask: PropTypes.func.isRequired,
-    saveTask: PropTypes.func.isRequired,
-    cancelEdit: PropTypes.func.isRequired,
-    deleteTask: PropTypes.func.isRequired,
-    deleteId: PropTypes.number,
-    confirmDelete: PropTypes.func.isRequired,
-    cancelDelete: PropTypes.func.isRequired,
 };
 
 export default TaskItem;
