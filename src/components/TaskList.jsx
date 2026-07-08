@@ -15,6 +15,9 @@ function TaskList({
     setEditDueDate,
     editPriority,
     setEditPriority,
+    deleteId,
+    confirmDelete,
+    cancelDelete,
 }) {
     return (
         <ul>
@@ -33,6 +36,9 @@ function TaskList({
                     editTask={editTask}
                     saveTask={saveTask}
                     deleteTask={deleteTask}
+                    deleteId={deleteId}
+                    confirmDelete={confirmDelete}
+                    cancelDelete={cancelDelete}
                     cancelEdit={cancelEdit}
                 />
             ))}
@@ -54,6 +60,9 @@ TaskList.propTypes = {
     saveTask: PropTypes.func.isRequired,
     cancelEdit: PropTypes.func.isRequired,
     deleteTask: PropTypes.func.isRequired,
+    deleteId: PropTypes.number,
+    confirmDelete: PropTypes.func.isRequired,
+    cancelDelete: PropTypes.func.isRequired,
 };
 
 export default TaskList;

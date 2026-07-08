@@ -27,6 +27,7 @@ function App() {
   const [sortBy, setSortBy] = useState("Newest");
 
   const [editingId, setEditingId] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
   const [editText, setEditText] = useState("");
   const [editDueDate, setEditDueDate] = useState("");
   const [editPriority, setEditPriority] = useState("Medium");
@@ -134,8 +135,17 @@ function App() {
     }
   });
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+  const confirmDelete = (id) => {
+    setDeleteId(id);
+  };
+
+  const deleteTask = () => {
+    setTasks(tasks.filter((task) => task.id !== deleteId));
+    setDeleteId(null);
+  };
+
+  const cancelDelete = () => {
+    setDeleteId(null);
   };
 
   const editTask = (task) => {
@@ -251,6 +261,9 @@ function App() {
       saveTask={saveTask}
       cancelEdit={cancelEdit}
       deleteTask={deleteTask}
+      deleteId={deleteId}
+      confirmDelete={confirmDelete}
+      cancelDelete={cancelDelete}
     />
   );
 }

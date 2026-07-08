@@ -14,6 +14,9 @@ function TaskItem({
     saveTask,
     cancelEdit,
     deleteTask,
+    deleteId,
+    confirmDelete,
+    cancelDelete,
 }) {
     const isEditing = editingId === task.id;
 
@@ -88,9 +91,21 @@ function TaskItem({
                             Edit
                         </button>
 
-                        <button onClick={() => deleteTask(task.id)}>
-                            Delete
-                        </button>
+                        {deleteId === task.id ? (
+                            <>
+                                <button onClick={deleteTask}>
+                                    Yes
+                                </button>
+
+                                <button onClick={cancelDelete}>
+                                    Cancel
+                                </button>
+                            </>
+                        ) : (
+                            <button onClick={() => confirmDelete(task.id)}>
+                                Delete
+                            </button>
+                        )}
                     </>
                 )}
             </div>
@@ -117,6 +132,9 @@ TaskItem.propTypes = {
     saveTask: PropTypes.func.isRequired,
     cancelEdit: PropTypes.func.isRequired,
     deleteTask: PropTypes.func.isRequired,
+    deleteId: PropTypes.number,
+    confirmDelete: PropTypes.func.isRequired,
+    cancelDelete: PropTypes.func.isRequired,
 };
 
 export default TaskItem;
