@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useTaskContext } from "../context/TaskContext";
+import { getTaskStatus } from "../utils/taskStatus";
 
 function TaskItem({ task }) {
     const {
@@ -21,6 +22,7 @@ function TaskItem({ task }) {
     } = useTaskContext();
 
     const isEditing = editingId === task.id;
+    const { status, statusClass } = getTaskStatus(task.dueDate);
 
     return (
         <li>
@@ -63,6 +65,12 @@ function TaskItem({ task }) {
                     <p className="task-details">
                         📅 Due: {task.dueDate || "Not Set"}
                     </p>
+
+                    {status && (
+                        <p className={`task-status ${statusClass}`}>
+                            {status}
+                        </p>
+                    )}
 
                     <p className="task-details">
                         {task.priority === "High" && "🔴 High"}
