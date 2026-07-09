@@ -1,6 +1,7 @@
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { TaskContext } from "./context/TaskContext";
 import "./App.css";
 
 function App() {
@@ -83,13 +84,15 @@ function App() {
     setError("");
   };
 
-  const toggleTask = (id) => {
-    setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
+  const toggleTask = useCallback((id) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((t) =>
+        t.id === id
+          ? { ...t, completed: !t.completed }
+          : t
       )
     );
-  };
+  }, []);
 
 
   const filteredTasks = tasks.filter((task) => {
@@ -135,36 +138,38 @@ function App() {
     }
   });
 
-  const confirmDelete = (id) => {
+  const confirmDelete = useCallback((id) => {
     setDeleteId(id);
-  };
+  }, []);
 
-  const deleteTask = () => {
-    setTasks(tasks.filter((task) => task.id !== deleteId));
+  const deleteTask = useCallback(() => {
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== deleteId)
+    );
     setDeleteId(null);
-  };
+  }, [deleteId]);
 
-  const cancelDelete = () => {
+  const cancelDelete = useCallback(() => {
     setDeleteId(null);
-  };
+  }, []);
 
-  const editTask = (task) => {
+  const editTask = useCallback((task) => {
     setEditingId(task.id);
     setEditText(task.text);
     setEditDueDate(task.dueDate || "");
     setEditPriority(task.priority || "Medium");
-  };
+  }, []);
 
-  const cancelEdit = () => {
+  const cancelEdit = useCallback(() => {
     setEditingId(null);
     setEditText("");
     setEditDueDate("");
     setEditPriority("Medium");
-  };
+  }, []);
 
 
 
-  const saveTask = () => {
+  const saveTask = useCallback(() => {
     const isDuplicate = tasks.some(
       (task) =>
         task.id !== editingId &&
@@ -191,7 +196,12 @@ function App() {
     );
 
     cancelEdit();
-  };
+  }, [tasks,
+    editingId,
+    editText,
+    editDueDate,
+    editPriority,
+    cancelEdit,]);
 
 
   const logout = () => {
@@ -210,6 +220,39 @@ function App() {
   ).length;
 
   const pendingTasks = totalTasks - completedTasks;
+  const taskContextValue = useMemo(
+    () => ({
+      editingId,
+      editText,
+      setEditText,
+      editDueDate,
+      setEditDueDate,
+      editPriority,
+      setEditPriority,
+      toggleTask,
+      editTask,
+      saveTask,
+      cancelEdit,
+      deleteTask,
+      deleteId,
+      confirmDelete,
+      cancelDelete,
+    }),
+    [
+      editingId,
+      editText,
+      editDueDate,
+      editPriority,
+      deleteId,
+      toggleTask,
+      editTask,
+      saveTask,
+      cancelEdit,
+      deleteTask,
+      confirmDelete,
+      cancelDelete,
+    ]
+  );
   if (!isLoggedIn) {
     return (
       <Login
@@ -224,47 +267,30 @@ function App() {
 
 
   return (
-    <Dashboard
-      employeeId={employeeId}
-      logout={logout}
-      totalTasks={totalTasks}
-      completedTasks={completedTasks}
-      pendingTasks={pendingTasks}
-      search={search}
-      setSearch={setSearch}
-      filter={filter}
-      setFilter={setFilter}
-      task={task}
-      setTask={setTask}
-      addTask={addTask}
-      dueDate={dueDate}
-      setDueDate={setDueDate}
-      priority={priority}
-      setPriority={setPriority}
-      error={error}
-      filteredTasks={sortedTasks}
-      sortBy={sortBy}
-      setSortBy={setSortBy}
-
-      editingId={editingId}
-      editText={editText}
-      setEditText={setEditText}
-
-      editDueDate={editDueDate}
-      setEditDueDate={setEditDueDate}
-
-      editPriority={editPriority}
-      setEditPriority={setEditPriority}
-
-      toggleTask={toggleTask}
-      editTask={editTask}
-      saveTask={saveTask}
-      cancelEdit={cancelEdit}
-      deleteTask={deleteTask}
-      deleteId={deleteId}
-      confirmDelete={confirmDelete}
-      cancelDelete={cancelDelete}
-    />
+    <TaskContext.Provider value={taskContextValue}>
+      <Dashboard
+        employeeId={employeeId}
+        logout={logout}
+        totalTasks={totalTasks}
+        completedTasks={completedTasks}
+        pendingTasks={pendingTasks}
+        search={search}
+        setSearch={setSearch}
+        filter={filter}
+        setFilter={setFilter}
+        task={task}
+        setTask={setTask}
+        addTask={addTask}
+        dueDate={dueDate}
+        setDueDate={setDueDate}
+        priority={priority}
+        setPriority={setPriority}
+        error={error}
+        filteredTasks={sortedTasks}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+      />
+    </TaskContext.Provider>
   );
 }
 
