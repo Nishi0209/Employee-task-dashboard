@@ -19,7 +19,8 @@ body {
 
 .login-box,
 .dashboard {
-  width: 400px;
+  width: 550px;
+  max-width: 100%;
   background: #fff;
   padding: 25px;
   border-radius: 10px;
@@ -56,21 +57,6 @@ button:hover {
   background: #1d4ed8;
 }
 
-.task-input {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.task-input input {
-  flex: 1;
-}
-
-.task-input button {
-  width: 120px;
-  margin: 0;
-}
-
 ul {
   list-style: none;
 }
@@ -78,25 +64,25 @@ ul {
 li {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  margin-top: 10px;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  margin-top: 12px;
   background: #f7f7f7;
-  border-radius: 5px;
-  gap: 10px;
+  border-radius: 8px;
 }
 
 li button {
-  width: 90px;
-  margin: 0;
+  min-width: 90px;
+  width: auto;
 }
 
 select {
-  width: 100%;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 100%;
 }
 
 .stats {
@@ -112,23 +98,31 @@ select {
 
 li div {
   display: flex;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.task-info {
+.task-input {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
 }
 
-.task-details {
+.task-input input[type="text"] {
+  flex: 1 1 100%;
+}
+
+.task-input input[type="date"] {
+  width: 140px;
+}
+
+.task-input select {
+  width: 120px;
   margin: 0;
-  font-size: 13px;
-  color: #666;
 }
 
-.error {
-  color: red;
-  margin: 8px 0;
-  font-size: 14px;
+.task-input button {
+  width: 110px;
+  margin: 0;
 }
