@@ -33,6 +33,9 @@ function Dashboard({
     toggleTask,
     editTask,
     saveTask,
+    deleteId,
+    confirmDelete,
+    cancelDelete,
     deleteTask,
     editDueDate,
     setEditDueDate,
@@ -91,6 +94,9 @@ function Dashboard({
                     editTask={editTask}
                     saveTask={saveTask}
                     deleteTask={deleteTask}
+                    deleteId={deleteId}
+                    confirmDelete={confirmDelete}
+                    cancelDelete={cancelDelete}
                     editDueDate={editDueDate}
                     setEditDueDate={setEditDueDate}
                     editPriority={editPriority}

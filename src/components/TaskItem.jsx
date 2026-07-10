@@ -1,20 +1,25 @@
 import PropTypes from "prop-types";
+import { useTaskContext } from "../context/TaskContext";
 
-function TaskItem({
-    task,
-    editingId,
-    editText,
-    setEditText,
-    editDueDate,
-    setEditDueDate,
-    editPriority,
-    setEditPriority,
-    toggleTask,
-    editTask,
-    saveTask,
-    cancelEdit,
-    deleteTask,
-}) {
+function TaskItem({ task }) {
+    const {
+        editingId,
+        editText,
+        setEditText,
+        editDueDate,
+        setEditDueDate,
+        editPriority,
+        setEditPriority,
+        toggleTask,
+        editTask,
+        saveTask,
+        cancelEdit,
+        deleteTask,
+        deleteId,
+        confirmDelete,
+        cancelDelete,
+    } = useTaskContext();
+
     const isEditing = editingId === task.id;
 
     return (
@@ -88,9 +93,21 @@ function TaskItem({
                             Edit
                         </button>
 
-                        <button onClick={() => deleteTask(task.id)}>
-                            Delete
-                        </button>
+                        {deleteId === task.id ? (
+                            <>
+                                <button onClick={deleteTask}>
+                                    Yes
+                                </button>
+
+                                <button onClick={cancelDelete}>
+                                    Cancel
+                                </button>
+                            </>
+                        ) : (
+                            <button onClick={() => confirmDelete(task.id)}>
+                                Delete
+                            </button>
+                        )}
                     </>
                 )}
             </div>
@@ -100,23 +117,6 @@ function TaskItem({
 
 TaskItem.propTypes = {
     task: PropTypes.object.isRequired,
-
-    editingId: PropTypes.number,
-
-    editText: PropTypes.string.isRequired,
-    setEditText: PropTypes.func.isRequired,
-
-    editDueDate: PropTypes.string.isRequired,
-    setEditDueDate: PropTypes.func.isRequired,
-
-    editPriority: PropTypes.string.isRequired,
-    setEditPriority: PropTypes.func.isRequired,
-
-    toggleTask: PropTypes.func.isRequired,
-    editTask: PropTypes.func.isRequired,
-    saveTask: PropTypes.func.isRequired,
-    cancelEdit: PropTypes.func.isRequired,
-    deleteTask: PropTypes.func.isRequired,
 };
 
 export default TaskItem;
