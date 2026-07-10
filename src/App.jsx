@@ -1,7 +1,7 @@
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { TaskContext } from "./context/TaskContext";
+import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -84,16 +84,16 @@ function App() {
     setError("");
   };
 
-  const toggleTask = useCallback((id) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((t) =>
-        t.id === id
-          ? { ...t, completed: !t.completed }
-          : t
-      )
+  const toggleTask = (id) => {
+    setTasks(
+      tasks.map((task) =>
+        t.id === id ? { ...t, completed: !t.completed } : t,
+      ),
     );
   }, []);
 
+  const matchesSearch = (task, query) =>
+    task.text.toLowerCase().includes(query.toLowerCase());
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.text
@@ -153,7 +153,21 @@ function App() {
     setDeleteId(null);
   }, []);
 
-  const editTask = useCallback((task) => {
+const editTask = (task) => {
+  setEditingId(task.id);
+  setEditText(task.text);
+};
+
+const saveTask = () => {
+  setTasks(
+    tasks.map((task) =>
+      task.id === editingId
+        ? { ...task, text: editText }
+        : task
+    )
+  );
+
+  const editTask = (task) => {
     setEditingId(task.id);
     setEditText(task.text);
     setEditDueDate(task.dueDate || "");
