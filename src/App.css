@@ -96,11 +96,7 @@ select {
   margin: 5px 0;
 }
 
-li div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+
 
 .task-input {
   display: flex;
@@ -125,4 +121,43 @@ li div {
 .task-input button {
   width: 110px;
   margin: 0;
+}
+
+.edit-task {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+}
+
+.edit-task input,
+.edit-task select {
+  width: 100%;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.task-actions button {
+  width: 100px;
+}
+
+.task-info span {
+  font-size: 18px;
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+.task-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
 }

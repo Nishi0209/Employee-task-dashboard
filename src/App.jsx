@@ -15,6 +15,30 @@ function App() {
     JSON.parse(localStorage.getItem("isLoggedIn")) || false
   );
   const [task, setTask] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [priority, setPriority] = useState("Medium");
+  const [error, setError] = useState("");
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
+
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
+  const [editDueDate, setEditDueDate] = useState("");
+  const [editPriority, setEditPriority] = useState("Medium");
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("employeeId", employeeId);
+    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
+  }, [employeeId, isLoggedIn]);
+
 
   const handleLogin = () => {
     if (!employeeId || !password) {
@@ -101,19 +125,46 @@ const saveTask = () => {
   const editTask = (task) => {
     setEditingId(task.id);
     setEditText(task.text);
+    setEditDueDate(task.dueDate || "");
+    setEditPriority(task.priority || "Medium");
   };
 
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText("");
+    setEditDueDate("");
+    setEditPriority("Medium");
+  };
+
+
+
   const saveTask = () => {
+    const isDuplicate = tasks.some(
+      (task) =>
+        task.id !== editingId &&
+        task.text.trim().toLowerCase() ===
+        editText.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      alert("Task already exists.");
+      return;
+    }
+
     setTasks(
       tasks.map((task) =>
         task.id === editingId
-          ? { ...task, text: editText }
+          ? {
+            ...task,
+            text: editText.trim(),
+            dueDate: editDueDate,
+            priority: editPriority,
+          }
           : task
       )
     );
 
-    setEditingId(null);
-    setEditText("");
+    cancelEdit();
   };
 
 
@@ -166,12 +217,21 @@ const saveTask = () => {
       setPriority={setPriority}
       error={error}
       filteredTasks={filteredTasks}
+
       editingId={editingId}
       editText={editText}
       setEditText={setEditText}
+
+      editDueDate={editDueDate}
+      setEditDueDate={setEditDueDate}
+
+      editPriority={editPriority}
+      setEditPriority={setEditPriority}
+
       toggleTask={toggleTask}
       editTask={editTask}
       saveTask={saveTask}
+      cancelEdit={cancelEdit}
       deleteTask={deleteTask}
     />
   );

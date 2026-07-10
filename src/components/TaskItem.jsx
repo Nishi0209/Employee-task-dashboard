@@ -5,18 +5,44 @@ function TaskItem({
     editingId,
     editText,
     setEditText,
+    editDueDate,
+    setEditDueDate,
+    editPriority,
+    setEditPriority,
     toggleTask,
     editTask,
     saveTask,
+    cancelEdit,
     deleteTask,
 }) {
+    const isEditing = editingId === task.id;
+
     return (
         <li>
-            {editingId === task.id ? (
-                <input
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                />
+            {isEditing ? (
+                <div className="edit-task">
+                    <input
+                        type="text"
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        placeholder="Task Name"
+                    />
+
+                    <input
+                        type="date"
+                        value={editDueDate}
+                        onChange={(e) => setEditDueDate(e.target.value)}
+                    />
+
+                    <select
+                        value={editPriority}
+                        onChange={(e) => setEditPriority(e.target.value)}
+                    >
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                    </select>
+                </div>
             ) : (
                 <div className="task-info">
                     <span
@@ -41,22 +67,32 @@ function TaskItem({
                 </div>
             )}
 
-            <div>
-                <button onClick={() => toggleTask(task.id)}>
-                    {task.completed ? "Undo" : "Complete"}
-                </button>
+            <div className="task-actions">
+                {isEditing ? (
+                    <>
+                        <button onClick={saveTask}>
+                            Save
+                        </button>
 
-                {editingId === task.id ? (
-                    <button onClick={saveTask}>Save</button>
+                        <button onClick={cancelEdit}>
+                            Cancel
+                        </button>
+                    </>
                 ) : (
-                    <button onClick={() => editTask(task)}>
-                        Edit
-                    </button>
-                )}
+                    <>
+                        <button onClick={() => toggleTask(task.id)}>
+                            {task.completed ? "Undo" : "Complete"}
+                        </button>
 
-                <button onClick={() => deleteTask(task.id)}>
-                    Delete
-                </button>
+                        <button onClick={() => editTask(task)}>
+                            Edit
+                        </button>
+
+                        <button onClick={() => deleteTask(task.id)}>
+                            Delete
+                        </button>
+                    </>
+                )}
             </div>
         </li>
     );
@@ -64,12 +100,22 @@ function TaskItem({
 
 TaskItem.propTypes = {
     task: PropTypes.object.isRequired,
+
     editingId: PropTypes.number,
+
     editText: PropTypes.string.isRequired,
     setEditText: PropTypes.func.isRequired,
+
+    editDueDate: PropTypes.string.isRequired,
+    setEditDueDate: PropTypes.func.isRequired,
+
+    editPriority: PropTypes.string.isRequired,
+    setEditPriority: PropTypes.func.isRequired,
+
     toggleTask: PropTypes.func.isRequired,
     editTask: PropTypes.func.isRequired,
     saveTask: PropTypes.func.isRequired,
+    cancelEdit: PropTypes.func.isRequired,
     deleteTask: PropTypes.func.isRequired,
 };
 
