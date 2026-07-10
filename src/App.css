@@ -184,3 +184,20 @@ select {
   color: #2563eb;
   margin-bottom: 12px;
 }
+
+.task-status {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.overdue {
+  color: #dc2626;
+}
+
+.due-today {
+  color: #ea580c;
+}
+
+.upcoming {
+  color: #16a34a;
+}
