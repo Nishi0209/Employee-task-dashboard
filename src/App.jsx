@@ -90,7 +90,7 @@ function App() {
         t.id === id ? { ...t, completed: !t.completed } : t,
       ),
     );
-  };
+  }, []);
 
   const matchesSearch = (task, query) =>
     task.text.toLowerCase().includes(query.toLowerCase());
@@ -138,18 +138,20 @@ function App() {
     }
   });
 
-  const confirmDelete = (id) => {
+  const confirmDelete = useCallback((id) => {
     setDeleteId(id);
-  };
+  }, []);
 
-  const deleteTask = () => {
-    setTasks(tasks.filter((task) => task.id !== deleteId));
+  const deleteTask = useCallback(() => {
+    setTasks((prevTasks) =>
+      prevTasks.filter((task) => task.id !== deleteId)
+    );
     setDeleteId(null);
-  };
+  }, [deleteId]);
 
-  const cancelDelete = () => {
+  const cancelDelete = useCallback(() => {
     setDeleteId(null);
-  };
+  }, []);
 
 const editTask = (task) => {
   setEditingId(task.id);
@@ -170,18 +172,18 @@ const saveTask = () => {
     setEditText(task.text);
     setEditDueDate(task.dueDate || "");
     setEditPriority(task.priority || "Medium");
-  };
+  }, []);
 
-  const cancelEdit = () => {
+  const cancelEdit = useCallback(() => {
     setEditingId(null);
     setEditText("");
     setEditDueDate("");
     setEditPriority("Medium");
-  };
+  }, []);
 
 
 
-  const saveTask = () => {
+  const saveTask = useCallback(() => {
     const isDuplicate = tasks.some(
       (task) =>
         task.id !== editingId &&
@@ -208,7 +210,12 @@ const saveTask = () => {
     );
 
     cancelEdit();
-  };
+  }, [tasks,
+    editingId,
+    editText,
+    editDueDate,
+    editPriority,
+    cancelEdit,]);
 
 
   const logout = () => {
@@ -227,6 +234,39 @@ const saveTask = () => {
   ).length;
 
   const pendingTasks = totalTasks - completedTasks;
+  const taskContextValue = useMemo(
+    () => ({
+      editingId,
+      editText,
+      setEditText,
+      editDueDate,
+      setEditDueDate,
+      editPriority,
+      setEditPriority,
+      toggleTask,
+      editTask,
+      saveTask,
+      cancelEdit,
+      deleteTask,
+      deleteId,
+      confirmDelete,
+      cancelDelete,
+    }),
+    [
+      editingId,
+      editText,
+      editDueDate,
+      editPriority,
+      deleteId,
+      toggleTask,
+      editTask,
+      saveTask,
+      cancelEdit,
+      deleteTask,
+      confirmDelete,
+      cancelDelete,
+    ]
+  );
   if (!isLoggedIn) {
     return (
       <Login
@@ -241,47 +281,30 @@ const saveTask = () => {
 
 
   return (
-    <Dashboard
-      employeeId={employeeId}
-      logout={logout}
-      totalTasks={totalTasks}
-      completedTasks={completedTasks}
-      pendingTasks={pendingTasks}
-      search={search}
-      setSearch={setSearch}
-      filter={filter}
-      setFilter={setFilter}
-      task={task}
-      setTask={setTask}
-      addTask={addTask}
-      dueDate={dueDate}
-      setDueDate={setDueDate}
-      priority={priority}
-      setPriority={setPriority}
-      error={error}
-      filteredTasks={sortedTasks}
-      sortBy={sortBy}
-      setSortBy={setSortBy}
-
-      editingId={editingId}
-      editText={editText}
-      setEditText={setEditText}
-
-      editDueDate={editDueDate}
-      setEditDueDate={setEditDueDate}
-
-      editPriority={editPriority}
-      setEditPriority={setEditPriority}
-
-      toggleTask={toggleTask}
-      editTask={editTask}
-      saveTask={saveTask}
-      cancelEdit={cancelEdit}
-      deleteTask={deleteTask}
-      deleteId={deleteId}
-      confirmDelete={confirmDelete}
-      cancelDelete={cancelDelete}
-    />
+    <TaskContext.Provider value={taskContextValue}>
+      <Dashboard
+        employeeId={employeeId}
+        logout={logout}
+        totalTasks={totalTasks}
+        completedTasks={completedTasks}
+        pendingTasks={pendingTasks}
+        search={search}
+        setSearch={setSearch}
+        filter={filter}
+        setFilter={setFilter}
+        task={task}
+        setTask={setTask}
+        addTask={addTask}
+        dueDate={dueDate}
+        setDueDate={setDueDate}
+        priority={priority}
+        setPriority={setPriority}
+        error={error}
+        filteredTasks={sortedTasks}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+      />
+    </TaskContext.Provider>
   );
 }
 

@@ -27,21 +27,6 @@ function Dashboard({
     filteredTasks,
     sortBy,
     setSortBy,
-    editingId,
-    editText,
-    setEditText,
-    toggleTask,
-    editTask,
-    saveTask,
-    deleteId,
-    confirmDelete,
-    cancelDelete,
-    deleteTask,
-    editDueDate,
-    setEditDueDate,
-    editPriority,
-    setEditPriority,
-    cancelEdit,
 }) {
     return (
         <div className="container">
@@ -87,21 +72,6 @@ function Dashboard({
 
                 <TaskList
                     filteredTasks={filteredTasks}
-                    editingId={editingId}
-                    editText={editText}
-                    setEditText={setEditText}
-                    toggleTask={toggleTask}
-                    editTask={editTask}
-                    saveTask={saveTask}
-                    deleteTask={deleteTask}
-                    deleteId={deleteId}
-                    confirmDelete={confirmDelete}
-                    cancelDelete={cancelDelete}
-                    editDueDate={editDueDate}
-                    setEditDueDate={setEditDueDate}
-                    editPriority={editPriority}
-                    setEditPriority={setEditPriority}
-                    cancelEdit={cancelEdit}
                 />
             </div>
         </div>
@@ -137,23 +107,6 @@ Dashboard.propTypes = {
     error: PropTypes.string,
 
     filteredTasks: PropTypes.array.isRequired,
-
-    editingId: PropTypes.number,
-    editText: PropTypes.string.isRequired,
-    setEditText: PropTypes.func.isRequired,
-
-    toggleTask: PropTypes.func.isRequired,
-    editTask: PropTypes.func.isRequired,
-    saveTask: PropTypes.func.isRequired,
-    deleteTask: PropTypes.func.isRequired,
-
-    editDueDate: PropTypes.string.isRequired,
-    setEditDueDate: PropTypes.func.isRequired,
-
-    editPriority: PropTypes.string.isRequired,
-    setEditPriority: PropTypes.func.isRequired,
-
-    cancelEdit: PropTypes.func.isRequired,
 };
 
 export default Dashboard;
