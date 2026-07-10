@@ -1,18 +1,23 @@
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import { useEffect, useState } from "react";
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { TaskContext } from "./context/TaskContext";
 import "./App.css";
 
 function App() {
   const [employeeId, setEmployeeId] = useState(
-    localStorage.getItem("employeeId") || ""
+    localStorage.getItem("employeeId") || "",
   );
 
   const [password, setPassword] = useState("");
 
   const [isLoggedIn, setIsLoggedIn] = useState(
-    JSON.parse(localStorage.getItem("isLoggedIn")) || false
+    JSON.parse(localStorage.getItem("isLoggedIn")) || false,
   );
   const [task, setTask] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -42,7 +47,6 @@ function App() {
     localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
   }, [employeeId, isLoggedIn]);
 
-
   const handleLogin = () => {
     if (!employeeId || !password) {
       alert("Please enter Employee ID and Password");
@@ -58,7 +62,7 @@ function App() {
 
     const isDuplicate = tasks.some(
       (t) =>
-        t.text.trim().toLowerCase() === task.trim().toLowerCase()
+        t.text.trim().toLowerCase() === task.trim().toLowerCase(),
     );
 
     if (isDuplicate) {
@@ -84,16 +88,15 @@ function App() {
     setError("");
   };
 
-  const toggleTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        t.id === id ? { ...t, completed: !t.completed } : t,
+  const toggleTask = useCallback((id) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id
+          ? { ...task, completed: !task.completed }
+          : task,
       ),
     );
   }, []);
-
-  const matchesSearch = (task, query) =>
-    task.text.toLowerCase().includes(query.toLowerCase());
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.text
@@ -144,7 +147,7 @@ function App() {
 
   const deleteTask = useCallback(() => {
     setTasks((prevTasks) =>
-      prevTasks.filter((task) => task.id !== deleteId)
+      prevTasks.filter((task) => task.id !== deleteId),
     );
     setDeleteId(null);
   }, [deleteId]);
@@ -153,21 +156,7 @@ function App() {
     setDeleteId(null);
   }, []);
 
-const editTask = (task) => {
-  setEditingId(task.id);
-  setEditText(task.text);
-};
-
-const saveTask = () => {
-  setTasks(
-    tasks.map((task) =>
-      task.id === editingId
-        ? { ...task, text: editText }
-        : task
-    )
-  );
-
-  const editTask = (task) => {
+  const editTask = useCallback((task) => {
     setEditingId(task.id);
     setEditText(task.text);
     setEditDueDate(task.dueDate || "");
@@ -181,14 +170,12 @@ const saveTask = () => {
     setEditPriority("Medium");
   }, []);
 
-
-
   const saveTask = useCallback(() => {
     const isDuplicate = tasks.some(
       (task) =>
         task.id !== editingId &&
         task.text.trim().toLowerCase() ===
-        editText.trim().toLowerCase()
+        editText.trim().toLowerCase(),
     );
 
     if (isDuplicate) {
@@ -205,8 +192,8 @@ const saveTask = () => {
             dueDate: editDueDate,
             priority: editPriority,
           }
-          : task
-      )
+          : task,
+      ),
     );
 
     cancelEdit();
@@ -215,8 +202,7 @@ const saveTask = () => {
     editText,
     editDueDate,
     editPriority,
-    cancelEdit,]);
-
+    cancelEdit]);
 
   const logout = () => {
     localStorage.removeItem("employeeId");
@@ -230,7 +216,7 @@ const saveTask = () => {
   const totalTasks = tasks.length;
 
   const completedTasks = tasks.filter(
-    (task) => task.completed
+    (task) => task.completed,
   ).length;
 
   const pendingTasks = totalTasks - completedTasks;
@@ -265,7 +251,7 @@ const saveTask = () => {
       deleteTask,
       confirmDelete,
       cancelDelete,
-    ]
+    ],
   );
   if (!isLoggedIn) {
     return (
@@ -278,7 +264,6 @@ const saveTask = () => {
       />
     );
   }
-
 
   return (
     <TaskContext.Provider value={taskContextValue}>

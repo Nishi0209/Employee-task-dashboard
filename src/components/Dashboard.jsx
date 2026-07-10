@@ -7,106 +7,106 @@ import TaskList from "./TaskList";
 import Sort from "./Sort";
 
 function Dashboard({
-    employeeId,
-    logout,
-    totalTasks,
-    completedTasks,
-    pendingTasks,
-    search,
-    setSearch,
-    filter,
-    setFilter,
-    task,
-    setTask,
-    addTask,
-    dueDate,
-    setDueDate,
-    priority,
-    setPriority,
-    error,
-    filteredTasks,
-    sortBy,
-    setSortBy,
+  employeeId,
+  logout,
+  totalTasks,
+  completedTasks,
+  pendingTasks,
+  search,
+  setSearch,
+  filter,
+  setFilter,
+  task,
+  setTask,
+  addTask,
+  dueDate,
+  setDueDate,
+  priority,
+  setPriority,
+  error,
+  filteredTasks,
+  sortBy,
+  setSortBy,
 }) {
-    return (
-        <div className="container">
-            <div className="dashboard">
-                <h1>Employee Task Dashboard</h1>
+  return (
+    <div className="container">
+      <div className="dashboard">
+        <h1>Employee Task Dashboard</h1>
 
-                <h3>Welcome, {employeeId}</h3>
+        <h3>Welcome, {employeeId}</h3>
 
-                <Stats
-                    totalTasks={totalTasks}
-                    completedTasks={completedTasks}
-                    pendingTasks={pendingTasks}
-                />
+        <Stats
+          totalTasks={totalTasks}
+          completedTasks={completedTasks}
+          pendingTasks={pendingTasks}
+        />
 
-                <button onClick={logout}>
+        <button onClick={logout}>
                     Logout
-                </button>
+        </button>
 
-                <SearchBar
-                    search={search}
-                    setSearch={setSearch}
-                />
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
+        />
 
-                <Filter
-                    filter={filter}
-                    setFilter={setFilter}
-                />
-                <Sort
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                />
+        <Filter
+          filter={filter}
+          setFilter={setFilter}
+        />
+        <Sort
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
 
-                <TaskInput
-                    task={task}
-                    setTask={setTask}
-                    addTask={addTask}
-                    dueDate={dueDate}
-                    setDueDate={setDueDate}
-                    priority={priority}
-                    setPriority={setPriority}
-                    error={error}
-                />
+        <TaskInput
+          task={task}
+          setTask={setTask}
+          addTask={addTask}
+          dueDate={dueDate}
+          setDueDate={setDueDate}
+          priority={priority}
+          setPriority={setPriority}
+          error={error}
+        />
 
-                <TaskList
-                    filteredTasks={filteredTasks}
-                />
-            </div>
-        </div>
-    );
+        <TaskList
+          filteredTasks={filteredTasks}
+        />
+      </div>
+    </div>
+  );
 }
 Dashboard.propTypes = {
-    employeeId: PropTypes.string.isRequired,
-    logout: PropTypes.func.isRequired,
+  employeeId: PropTypes.string.isRequired,
+  logout: PropTypes.func.isRequired,
 
-    totalTasks: PropTypes.number.isRequired,
-    completedTasks: PropTypes.number.isRequired,
-    pendingTasks: PropTypes.number.isRequired,
+  totalTasks: PropTypes.number.isRequired,
+  completedTasks: PropTypes.number.isRequired,
+  pendingTasks: PropTypes.number.isRequired,
 
-    search: PropTypes.string.isRequired,
-    setSearch: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
+  setSearch: PropTypes.func.isRequired,
 
-    filter: PropTypes.string.isRequired,
-    setFilter: PropTypes.func.isRequired,
+  filter: PropTypes.string.isRequired,
+  setFilter: PropTypes.func.isRequired,
 
-    sortBy: PropTypes.string.isRequired,
-    setSortBy: PropTypes.func.isRequired,
+  sortBy: PropTypes.string.isRequired,
+  setSortBy: PropTypes.func.isRequired,
 
-    task: PropTypes.string.isRequired,
-    setTask: PropTypes.func.isRequired,
-    addTask: PropTypes.func.isRequired,
+  task: PropTypes.string.isRequired,
+  setTask: PropTypes.func.isRequired,
+  addTask: PropTypes.func.isRequired,
 
-    dueDate: PropTypes.string.isRequired,
-    setDueDate: PropTypes.func.isRequired,
+  dueDate: PropTypes.string.isRequired,
+  setDueDate: PropTypes.func.isRequired,
 
-    priority: PropTypes.string.isRequired,
-    setPriority: PropTypes.func.isRequired,
+  priority: PropTypes.string.isRequired,
+  setPriority: PropTypes.func.isRequired,
 
-    error: PropTypes.string,
+  error: PropTypes.string,
 
-    filteredTasks: PropTypes.array.isRequired,
+  filteredTasks: PropTypes.array.isRequired,
 };
 
 export default Dashboard;
