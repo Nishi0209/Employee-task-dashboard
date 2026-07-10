@@ -81,6 +81,7 @@ li{
   margin-top:10px;
   background:#f7f7f7;
   border-radius:5px;
+  gap:10px;
 }
 
 li button{
@@ -96,10 +97,18 @@ select{
   border-radius:5px;
 }
 
-li{
-  gap:10px;
+.stats{
+  background:#eef4ff;
+  padding:10px;
+  border-radius:5px;
+  margin:15px 0;
 }
 
-li button{
-  width:90px;
+.stats p{
+  margin:5px 0;
+}
+
+li div{
+  display:flex;
+  gap:5px;
 }

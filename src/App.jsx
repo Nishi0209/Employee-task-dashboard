@@ -65,6 +65,24 @@ const [isLoggedIn, setIsLoggedIn] = useState(
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
+const editTask = (task) => {
+  setEditingId(task.id);
+  setEditText(task.text);
+};
+
+const saveTask = () => {
+  setTasks(
+    tasks.map((task) =>
+      task.id === editingId
+        ? { ...task, text: editText }
+        : task
+    )
+  );
+
+  setEditingId(null);
+  setEditText("");
+};
+
 
 const logout = () => {
   localStorage.removeItem("employeeId");
@@ -74,6 +92,14 @@ const logout = () => {
   setPassword("");
   setIsLoggedIn(false);
 };
+
+const totalTasks = tasks.length;
+
+const completedTasks = tasks.filter(
+  (task) => task.completed
+).length;
+
+const pendingTasks = totalTasks - completedTasks;
 
 
   if (!isLoggedIn) {
@@ -109,6 +135,12 @@ const logout = () => {
 
         <h3>Welcome, {employeeId}</h3>
 
+        <div className="stats">
+  <p>Total Tasks : {totalTasks}</p>
+  <p>Completed : {completedTasks}</p>
+  <p>Pending : {pendingTasks}</p>
+</div>
+
         <button onClick={logout}>Logout</button>
 
         <input
@@ -141,21 +173,7 @@ const logout = () => {
         <ul>
           {filteredTasks.map((t) => (
             <li key={t.id}>
-              <span
-                style={{
-                  textDecoration: t.completed ? "line-through" : "none",
-                }}
-              >
-                {t.text}
-              </span>
 
-              <button onClick={() => toggleTask(t.id)}>
-                {t.completed ? "Undo" : "Complete"}
-              </button>
-
-              <button onClick={() => deleteTask(t.id)}>
-                Delete
-              </button>
             </li>
           ))}
         </ul>
