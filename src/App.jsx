@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -12,25 +12,9 @@ const [isLoggedIn, setIsLoggedIn] = useState(
   JSON.parse(localStorage.getItem("isLoggedIn")) || false
 );
   const [task, setTask] = useState("");
-  const [tasks, setTasks] = useState(() => {
-  const savedTasks = localStorage.getItem("tasks");
-  return savedTasks ? JSON.parse(savedTasks) : [];
-});
+  const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-
-  const [editingId, setEditingId] = useState(null);
-  const [editText, setEditText] = useState("");
-
-  useEffect(() => {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}, [tasks]);
-
-  useEffect(() => {
-  localStorage.setItem("employeeId", employeeId);
-  localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
-}, [employeeId, isLoggedIn]);
-
 
   const handleLogin = () => {
     if (!employeeId || !password) {
@@ -41,7 +25,9 @@ const [isLoggedIn, setIsLoggedIn] = useState(
   };
 
   const addTask = () => {
-    if (!task.trim()) return;
+    if (!task.trim()) {
+      return;
+    }
 
     setTasks([
       ...tasks,
@@ -57,29 +43,27 @@ const [isLoggedIn, setIsLoggedIn] = useState(
 
   const toggleTask = (id) => {
     setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+      tasks.map((task) =>
+        t.id === id ? { ...t, completed: !t.completed } : t,
+      ),
     );
   };
 
+  const matchesSearch = (task, query) =>
+    task.text.toLowerCase().includes(query.toLowerCase());
 
-  const filteredTasks = tasks.filter((task) => {
-  const matchesSearch = task.text
-    .toLowerCase()
-    .includes(search.toLowerCase());
-
-  const matchesFilter =
+  const matchesStatus = (task, filter) =>
     filter === "All" ||
     (filter === "Completed" && task.completed) ||
     (filter === "Pending" && !task.completed);
 
-  return matchesSearch && matchesFilter;
-});
+  const filteredTasks = tasks.filter(
+    (task) => matchesSearch(task, search) && matchesStatus(task, filter)
+  );
 
-const deleteTask = (id) => {
-  setTasks(tasks.filter((task) => task.id !== id));
-};
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
 
 const editTask = (task) => {
   setEditingId(task.id);
@@ -160,20 +144,20 @@ const pendingTasks = totalTasks - completedTasks;
         <button onClick={logout}>Logout</button>
 
         <input
-           type="text"
-            placeholder="Search Task"
-           value={search}
-            onChange={(e) => setSearch(e.target.value)}
-/>
+          type="text"
+          placeholder="Search Task"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-<select
-  value={filter}
-  onChange={(e) => setFilter(e.target.value)}
->
-  <option>All</option>
-  <option>Pending</option>
-  <option>Completed</option>
-</select>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option>All</option>
+          <option>Pending</option>
+          <option>Completed</option>
+        </select>
 
         <div className="task-input">
           <input
@@ -189,40 +173,7 @@ const pendingTasks = totalTasks - completedTasks;
         <ul>
           {filteredTasks.map((t) => (
             <li key={t.id}>
-             {editingId === t.id ? (
-  <input
-    value={editText}
-    onChange={(e) => setEditText(e.target.value)}
-  />
-) : (
-  <span
-    style={{
-      textDecoration: t.completed
-        ? "line-through"
-        : "none",
-    }}
-  >
-    {t.text}
-  </span>
-)}
 
-              <div>
-  <button onClick={() => toggleTask(t.id)}>
-    {t.completed ? "Undo" : "Complete"}
-  </button>
-
-  {editingId === t.id ? (
-    <button onClick={saveTask}>Save</button>
-  ) : (
-    <button onClick={() => editTask(t)}>
-      Edit
-    </button>
-  )}
-
-  <button onClick={() => deleteTask(t.id)}>
-    Delete
-  </button>
-</div>
             </li>
           ))}
         </ul>
