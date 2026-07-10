@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { TaskContext } from "./context/TaskContext";
+import { sanitizeInput } from "./utils/sanitize";
 import "./App.css";
 
 function App() {
@@ -48,10 +49,14 @@ function App() {
   }, [employeeId, isLoggedIn]);
 
   const handleLogin = () => {
-    if (!employeeId || !password) {
+    const sanitizedEmployeeId = sanitizeInput(employeeId);
+
+    if (!sanitizedEmployeeId || !password) {
       alert("Please enter Employee ID and Password");
       return;
     }
+
+    setEmployeeId(sanitizedEmployeeId);
     setIsLoggedIn(true);
   };
 
@@ -75,7 +80,7 @@ function App() {
       {
         id: Date.now(),
         createdAt: Date.now(),
-        text: task.trim(),
+        text: sanitizeInput(task),
         completed: false,
         dueDate,
         priority,
@@ -188,7 +193,7 @@ function App() {
         task.id === editingId
           ? {
             ...task,
-            text: editText.trim(),
+            text: sanitizeInput(editText),
             dueDate: editDueDate,
             priority: editPriority,
           }
