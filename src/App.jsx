@@ -1,5 +1,8 @@
 import Login from "./components/Login";
 import Stats from "./components/Stats";
+import SearchBar from "./components/SearchBar";
+import Filter from "./components/Filter";
+import TaskInput from "./components/TaskInput";
 import { useEffect, useState } from "react";
 import { useState } from "react";
 import "./App.css";
@@ -162,46 +165,26 @@ const saveTask = () => {
 
         <button onClick={logout}>Logout</button>
 
-        <input
-          type="text"
-          placeholder="Search Task"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
         />
 
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option>All</option>
-          <option>Pending</option>
-          <option>Completed</option>
-        </select>
+        <Filter
+          filter={filter}
+          setFilter={setFilter}
+        />
 
-        <div className="task-input">
-          <input
-            type="text"
-            placeholder="Enter a task"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-          />
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option>Low</option>
-            <option>Medium</option>
-            <option>High</option>
-          </select>
-
-          {error && <p className="error">{error}</p>}
-          <button onClick={addTask}>Add Task</button>
-        </div>
+        <TaskInput
+          task={task}
+          setTask={setTask}
+          addTask={addTask}
+          dueDate={dueDate}
+          setDueDate={setDueDate}
+          priority={priority}
+          setPriority={setPriority}
+          error={error}
+        />
 
         <ul>
           {filteredTasks.map((t) => (
