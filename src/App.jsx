@@ -1,6 +1,7 @@
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -81,12 +82,14 @@ function App() {
 
   const toggleTask = (id) => {
     setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+      tasks.map((task) =>
+        t.id === id ? { ...t, completed: !t.completed } : t,
+      ),
     );
   };
 
+  const matchesSearch = (task, query) =>
+    task.text.toLowerCase().includes(query.toLowerCase());
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.text
@@ -104,6 +107,20 @@ function App() {
   const deleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
+
+const editTask = (task) => {
+  setEditingId(task.id);
+  setEditText(task.text);
+};
+
+const saveTask = () => {
+  setTasks(
+    tasks.map((task) =>
+      task.id === editingId
+        ? { ...task, text: editText }
+        : task
+    )
+  );
 
   const editTask = (task) => {
     setEditingId(task.id);
