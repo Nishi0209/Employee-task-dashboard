@@ -1,3 +1,6 @@
+import Login from "./components/Login";
+import Stats from "./components/Stats";
+import { useEffect, useState } from "react";
 import { useState } from "react";
 import "./App.css";
 
@@ -134,27 +137,13 @@ const saveTask = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="container">
-        <div className="login-box">
-          <h1>Employee Login</h1>
-
-          <input
-            type="text"
-            placeholder="Employee ID"
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <button onClick={handleLogin}>Login</button>
-        </div>
-      </div>
+      <Login
+        employeeId={employeeId}
+        setEmployeeId={setEmployeeId}
+        password={password}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+      />
     );
   }
 
@@ -165,11 +154,11 @@ const saveTask = () => {
 
         <h3>Welcome, {employeeId}</h3>
 
-        <div className="stats">
-          <p>Total Tasks : {totalTasks}</p>
-          <p>Completed : {completedTasks}</p>
-          <p>Pending : {pendingTasks}</p>
-        </div>
+        <Stats
+          totalTasks={totalTasks}
+          completedTasks={completedTasks}
+          pendingTasks={pendingTasks}
+        />
 
         <button onClick={logout}>Logout</button>
 
