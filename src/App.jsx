@@ -1,6 +1,7 @@
 import Login from "./components/Login";
 import Stats from "./components/Stats";
 import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -14,28 +15,6 @@ function App() {
     JSON.parse(localStorage.getItem("isLoggedIn")) || false
   );
   const [task, setTask] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [priority, setPriority] = useState("Medium");
-  const [error, setError] = useState("");
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
-
-  const [editingId, setEditingId] = useState(null);
-  const [editText, setEditText] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  useEffect(() => {
-    localStorage.setItem("employeeId", employeeId);
-    localStorage.setItem("isLoggedIn", JSON.stringify(isLoggedIn));
-  }, [employeeId, isLoggedIn]);
-
 
   const handleLogin = () => {
     if (!employeeId || !password) {
@@ -79,12 +58,14 @@ function App() {
 
   const toggleTask = (id) => {
     setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+      tasks.map((task) =>
+        t.id === id ? { ...t, completed: !t.completed } : t,
+      ),
     );
   };
 
+  const matchesSearch = (task, query) =>
+    task.text.toLowerCase().includes(query.toLowerCase());
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.text
@@ -102,6 +83,20 @@ function App() {
   const deleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
+
+const editTask = (task) => {
+  setEditingId(task.id);
+  setEditText(task.text);
+};
+
+const saveTask = () => {
+  setTasks(
+    tasks.map((task) =>
+      task.id === editingId
+        ? { ...task, text: editText }
+        : task
+    )
+  );
 
   const editTask = (task) => {
     setEditingId(task.id);
