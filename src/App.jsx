@@ -25,6 +25,8 @@ function App() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
+  const [sortBy, setSortBy] = useState("Newest");
+
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [editDueDate, setEditDueDate] = useState("");
@@ -67,6 +69,7 @@ function App() {
       ...tasks,
       {
         id: Date.now(),
+        createdAt: Date.now(),
         text: task.trim(),
         completed: false,
         dueDate,
@@ -102,6 +105,36 @@ function App() {
       (filter === "Pending" && !task.completed);
 
     return matchesSearch && matchesFilter;
+  });
+
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    switch (sortBy) {
+      case "Oldest":
+        return a.id - b.id;
+
+      case "Priority": {
+        const priorityOrder = {
+          High: 1,
+          Medium: 2,
+          Low: 3,
+        };
+
+        return (
+          priorityOrder[a.priority] -
+          priorityOrder[b.priority]
+        );
+      }
+
+      case "Due Date":
+        return (
+          new Date(a.dueDate || 0) -
+          new Date(b.dueDate || 0)
+        );
+
+      case "Newest":
+      default:
+        return b.id - a.id;
+    }
   });
 
   const deleteTask = (id) => {
@@ -216,7 +249,9 @@ const saveTask = () => {
       priority={priority}
       setPriority={setPriority}
       error={error}
-      filteredTasks={filteredTasks}
+      filteredTasks={sortedTasks}
+      sortBy={sortBy}
+      setSortBy={setSortBy}
 
       editingId={editingId}
       editText={editText}
