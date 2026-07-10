@@ -7,6 +7,8 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All");
 
   const handleLogin = () => {
     if (!employeeId || !password) {
@@ -17,7 +19,9 @@ function App() {
   };
 
   const addTask = () => {
-    if (!task.trim()) return;
+    if (!task.trim()) {
+      return;
+    }
 
     setTasks([
       ...tasks,
@@ -33,10 +37,26 @@ function App() {
 
   const toggleTask = (id) => {
     setTasks(
-      tasks.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+      tasks.map((task) =>
+        t.id === id ? { ...t, completed: !t.completed } : t,
+      ),
     );
+  };
+
+  const matchesSearch = (task, query) =>
+    task.text.toLowerCase().includes(query.toLowerCase());
+
+  const matchesStatus = (task, filter) =>
+    filter === "All" ||
+    (filter === "Completed" && task.completed) ||
+    (filter === "Pending" && !task.completed);
+
+  const filteredTasks = tasks.filter(
+    (task) => matchesSearch(task, search) && matchesStatus(task, filter)
+  );
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   if (!isLoggedIn) {
@@ -72,6 +92,22 @@ function App() {
 
         <h3>Welcome, {employeeId}</h3>
 
+        <input
+          type="text"
+          placeholder="Search Task"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option>All</option>
+          <option>Pending</option>
+          <option>Completed</option>
+        </select>
+
         <div className="task-input">
           <input
             type="text"
@@ -84,7 +120,7 @@ function App() {
         </div>
 
         <ul>
-          {tasks.map((t) => (
+          {filteredTasks.map((t) => (
             <li key={t.id}>
               <span
                 style={{
@@ -96,6 +132,10 @@ function App() {
 
               <button onClick={() => toggleTask(t.id)}>
                 {t.completed ? "Undo" : "Complete"}
+              </button>
+
+              <button onClick={() => deleteTask(t.id)}>
+                Delete
               </button>
             </li>
           ))}

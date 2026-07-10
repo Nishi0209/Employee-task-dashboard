@@ -87,3 +87,19 @@ li button{
   width:90px;
   margin:0;
 }
+
+select{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:5px;
+}
+
+li{
+  gap:10px;
+}
+
+li button{
+  width:90px;
+}
